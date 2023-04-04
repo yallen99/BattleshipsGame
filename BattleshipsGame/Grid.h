@@ -5,8 +5,6 @@
 #include <vector>
 using namespace std;
 
-#define INVALID_CELL_INDEX 99
-
 enum ECellState
 {
     None,
@@ -14,6 +12,7 @@ enum ECellState
     Miss,
     Full,
     Hidden,
+    Sunk
 };
 
 /**
@@ -73,20 +72,8 @@ private:
     
 public:
     Grid() = default;
-    Grid(const unsigned& rows, const unsigned& columns)
-    {
-        Columns = columns;
-        Rows = rows;
-
-        CellStateMap = {
-            {None, "[ ]"},
-            {Hit, "[X]"},
-            {Miss, "[O]"},
-            {Full, "[=]"},
-            {Hidden, "[ ]"},
-        };
-    }
-
+    Grid(const unsigned& rows, const unsigned& columns);
+    
     // -- Getters & Setters -- //
     unsigned GetRows() const { return Rows; }
     unsigned GetColumns() const { return Columns; }

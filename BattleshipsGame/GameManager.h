@@ -1,20 +1,21 @@
 ﻿#pragma once
+#include "AiBehaviour.h"
 #include "Grid.h"
+#include "PlayerController.h"
 
 using namespace std;
 
 class GameManager
 {
 private:
-    // -- Private members --//
-    Grid* DemoGrid = nullptr;
-    
-    // -- Private functions --//
+    PlayerController* Player = nullptr;
+    AiBehaviour* Computer = nullptr;
+    Grid* PlayerGrid = nullptr;
+    Grid* ComputerGrid = nullptr;
     
 public:
     // -- Constructor --//
     GameManager();
 
-    // -- Public functions --//
-    void Start() const;
+    void StartGame();
 };

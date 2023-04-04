@@ -1,6 +1,8 @@
 ﻿#include "Grid.h"
+#include "StaticValues.h"
 
 #include <iostream>
+
 using namespace std;
 
 void Grid::DrawGridCorner()
@@ -29,6 +31,20 @@ void Grid::DrawOneLine(const unsigned& r, const unsigned& columnCount, const Gri
         const unsigned cellIndex = columnCount * r + c;
         DrawCell(*grid.Cells[cellIndex]);
     }
+}
+
+Grid::Grid(const unsigned& rows, const unsigned& columns)
+{
+    Columns = columns;
+    Rows = rows;
+
+    CellStateMap = {
+        {None, "[ ]"},
+        {Hit, "[X]"},
+        {Miss, "[O]"},
+        {Full, "[=]"},
+        {Hidden, "[ ]"},
+    };
 }
 
 Cell* Grid::GetCellAt(const unsigned& row, const unsigned& column) 
@@ -87,6 +103,6 @@ bool Grid::IsCellWithinBounds(const unsigned& row,
     const unsigned& columnBound)
 {
     const bool cellIndexIsInBounds = column < columnBound && row < rowBound;
-    const bool cellIndexIsValid = column != INVALID_CELL_INDEX && row != INVALID_CELL_INDEX;
+    const bool cellIndexIsValid = column != InvalidCellIndex && row != InvalidCellIndex;
     return cellIndexIsValid && cellIndexIsInBounds;
 }

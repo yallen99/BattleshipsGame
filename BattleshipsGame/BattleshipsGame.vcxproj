@@ -154,13 +154,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AiBehaviour.cpp" />
     <ClCompile Include="BattleshipsGame.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="Ship.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AiBehaviour.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="Ship.h" />
+    <ClInclude Include="StaticValues.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Grid.cpp" />

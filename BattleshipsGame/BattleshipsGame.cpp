@@ -3,7 +3,7 @@
 
 int main()
 {
-    const auto game = GameManager();
-    game.Start();
+    auto game = GameManager();
+    game.StartGame();
     return 0;
 }

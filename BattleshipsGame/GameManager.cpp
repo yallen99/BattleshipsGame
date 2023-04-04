@@ -1,14 +1,20 @@
 ﻿#include "GameManager.h"
+
 #include <iostream>
 
 GameManager::GameManager()
 {
-    DemoGrid = new Grid(7, 7);
+    Player = new PlayerController();
+    Computer = new AiBehaviour();
+    PlayerGrid = Player->GetGrid();
+    ComputerGrid = Computer->GetGrid();
 }
 
-void GameManager::Start() const
+void GameManager::StartGame()
 {
-    DemoGrid->GenerateCells();
-    DemoGrid->DrawGrid();   
+    // todo place ships Player - manually
+    // todo place ships Computer - automatically
+    // todo Fighting phase
+    // todo Results
 }
 
