@@ -3,14 +3,6 @@
 #include <iostream>
 using namespace std;
 
-map<const ECellState, string> Grid::CellStateMap = {
-    {None, "[ ]"},
-    {Hit, "[X]"},
-    {Miss, "[O]"},
-    {Full, "[=]"},
-    {Hidden, "[ ]"},
-};
-
 void Grid::DrawGridCorner()
 {
     cout << "   ";
@@ -61,19 +53,22 @@ void Grid::GenerateCells()
     }
 }
 
-void Grid::DrawGrid() const
+void Grid::DrawGrid() 
 {
    DrawGridCorner();
     for(unsigned c = 0; c < Columns; c++)
     {
-        DrawColumnNumber(c);
+        DrawColumnNumber(c + 1);
     }
+    
+    cout << endl;
+    
     for(unsigned i = 0; i < Cells.size(); i++)
     {
         if(i % Rows == 0)
         {
             // If we reached the end of a line, jump on a new line
-            if(i / Rows == 0) cout << endl;
+            if(i / Rows != 0) cout << endl;
             DrawRowIndex(i / Rows);
         }
         DrawCell(*Cells[i]);
@@ -86,9 +81,12 @@ void Grid::DrawBoard(const Grid& PlayerOneGrid, const Grid& PlayerTwoGrid)
     // todo - draw the board for 2 players
 }
 
-bool Grid::IsCellWithinBounds(const unsigned& row, const unsigned& column, const unsigned& rowBound,
+bool Grid::IsCellWithinBounds(const unsigned& row,
+    const unsigned& column,
+    const unsigned& rowBound,
     const unsigned& columnBound)
 {
-     
-    return false;
+    const bool cellIndexIsInBounds = column < columnBound && row < rowBound;
+    const bool cellIndexIsValid = column != INVALID_CELL_INDEX && row != INVALID_CELL_INDEX;
+    return cellIndexIsValid && cellIndexIsInBounds;
 }

@@ -156,9 +156,11 @@
   <ItemGroup>
     <ClCompile Include="BattleshipsGame.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Grid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Grid.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Grid.cpp" />

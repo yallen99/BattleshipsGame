@@ -1,14 +1,14 @@
 ﻿#include "GameManager.h"
-
 #include <iostream>
+
+GameManager::GameManager()
+{
+    DemoGrid = new Grid(7, 7);
+}
 
 void GameManager::Start() const
 {
-    PrintMessage("Hello");
-    
+    DemoGrid->GenerateCells();
+    DemoGrid->DrawGrid();   
 }
 
-void GameManager::PrintMessage(const std::string& message) const
-{
-    cout << message << " ";
-}

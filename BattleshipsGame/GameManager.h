@@ -1,22 +1,20 @@
 ﻿#pragma once
+#include "Grid.h"
 
-#include <string>
 using namespace std;
-
 
 class GameManager
 {
 private:
     // -- Private members --//
-
+    Grid* DemoGrid = nullptr;
+    
     // -- Private functions --//
     
 public:
     // -- Constructor --//
-    GameManager() = default;
+    GameManager();
 
     // -- Public functions --//
     void Start() const;
-    void PrintMessage(const string& message) const;
-  
 };
