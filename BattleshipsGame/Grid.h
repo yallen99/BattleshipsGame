@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 
-enum ECellState
+enum ECellState : uint8_t
 {
     None,
     Hit,
@@ -13,6 +13,13 @@ enum ECellState
     Full,
     Hidden,
     Sunk
+};
+
+enum EOrientation : uint8_t
+{
+    Invalid = -1,
+    Horizontal = 0,
+    Vertical = 1
 };
 
 /**
@@ -23,8 +30,8 @@ struct Cell
 private:
     // -- Members -- //
     ECellState State = None;
-    unsigned ColumnIndex = 0;
     unsigned RowIndex = 0;
+    unsigned ColumnIndex = 0;
     
 public:
     // -- Constructor -- //

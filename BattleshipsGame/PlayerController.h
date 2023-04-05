@@ -39,7 +39,8 @@ public:
     vector<Ship*>& GetShipsOwned() { return ShipsOwned; }
     vector<Cell*>& GetCellsOccupied() { return CellsOccupiedByPlayer; }
     class Grid* GetGrid() const { return Grid; }
-
+    void AddOccupiedCell(Cell* cell) { CellsOccupiedByPlayer.emplace_back(cell); }
+    
     /**
      * \brief Find and return a Ship that overlaps on a given Cell
      */

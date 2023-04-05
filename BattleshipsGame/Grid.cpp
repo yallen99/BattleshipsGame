@@ -15,7 +15,7 @@ void Grid::DrawColumnNumber(const unsigned& c)
 }
 void Grid::DrawRowIndex(const unsigned& r)
 {
-    // Capital ascii letters start at 65
+    // Capital ASCII letters start at 65
     const char rowLetter = r + 65;
     cout << " " << rowLetter << " ";
 }
