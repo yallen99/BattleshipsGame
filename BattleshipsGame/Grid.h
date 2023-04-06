@@ -17,9 +17,9 @@ enum ECellState : uint8_t
 
 enum EOrientation : uint8_t
 {
-    Invalid = -1,
     Horizontal = 0,
-    Vertical = 1
+    Vertical = 1,
+    Invalid,
 };
 
 /**

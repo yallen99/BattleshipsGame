@@ -12,22 +12,22 @@ GameManager::GameManager()
     Computer = new AiBehaviour();
     PlayerGrid = Player->GetGrid();
     ComputerGrid = Computer->GetGrid();
-    MessengerTool = Messenger();
+    MessengerTool = StringChecker();
 }
 
 // ------------ GAME LOOP ------------ // 
 void GameManager::StartGame()
 {
-    MessengerTool.Print("Welcome to Battleships!");
+    cout << ("Welcome to Battleships!");
 
     // Generate a seed for the random generators
-    srand(time(nullptr));  // NOLINT(cert-msc51-cpp, clang-diagnostic-shorten-64-to-32)
+    srand(static_cast<int>(time(nullptr)));  // NOLINT(cert-msc51-cpp, clang-diagnostic-shorten-64-to-32)
     PlaceShipsPlayer();
     PlaceShipsComputer();
 
     cout << endl;
     cout << endl;
-    MessengerTool.Print("                        FIGHT!");
+    cout << ("                        FIGHT!");
     cout << endl;
     Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
 }
@@ -36,7 +36,7 @@ void GameManager::StartGame()
 void GameManager::PlaceShipsPlayer()
 {
     PlayerGrid->DrawGrid();
-    const unsigned shipsCount = Player->GetShipsOwned().size();  // NOLINT(clang-diagnostic-shorten-64-to-32)
+    const unsigned shipsCount = static_cast<unsigned>(Player->GetShipsOwned().size());
     unsigned unplacedShips = shipsCount;
     
     // Loop while there are still unplaced ships
@@ -44,17 +44,17 @@ void GameManager::PlaceShipsPlayer()
     {
         Ship& currentShip = *Player->GetShipsOwned()[shipsCount - unplacedShips];
 
-        MessengerTool.Print("Now placing ship - " + currentShip.GetShipName());
+        cout << ("Now placing ship - " + currentShip.GetShipName());
         
         // Input the Cell where to place the ship from (ships are placed left to right or top to bottom)
-        MessengerTool.Print("Enter slot (ie. A3):");
+        cout << ("Enter slot (ie. A3):");
         const pair<unsigned, unsigned> cell = TryGetCoordinatesFromInput();
         const unsigned row = cell.first;
         const unsigned column = cell.second;
         if(row == InvalidCellIndex || column == InvalidCellIndex) continue;
         
         // Input the orientation (vertical / horizontal)
-        MessengerTool.Print("Enter orientation (H / Horizontal or V / Vertical):");
+        cout << ("Enter orientation (H / Horizontal or V / Vertical):");
         EOrientation orientation = TryGetOrientationFromInput();
         if(orientation == Invalid) continue;
 
@@ -68,7 +68,7 @@ void GameManager::PlaceShipsPlayer()
 }
 void GameManager::PlaceShipsComputer()
 {
-    const unsigned shipsCount = Computer->GetShipsOwned().size(); // NOLINT(clang-diagnostic-shorten-64-to-32)
+    const unsigned shipsCount = static_cast<unsigned>(Computer->GetShipsOwned().size()); // NOLINT(clang-diagnostic-shorten-64-to-32)
     unsigned unplacedShips = shipsCount;
     // Loop while there are still unplaced ships
     do
@@ -107,7 +107,7 @@ pair<unsigned, unsigned> GameManager::TryGetCoordinatesFromInput()
 
     if(!MessengerTool.IsInputValid(inputCell, CellCheck))
     {
-        MessengerTool.Print("Cell position is invalid!");
+        cout << ("Cell position is invalid!");
         return {InvalidCellIndex, InvalidCellIndex};
     }
     
@@ -120,7 +120,7 @@ EOrientation GameManager::TryGetOrientationFromInput()
     if(!MessengerTool.IsInputValid(inputOrientation, OrientationCheckHorizontal) &&
         !MessengerTool.IsInputValid(inputOrientation, OrientationCheckVertical))
     {
-        MessengerTool.Print("Cell orientation is invalid!");
+        cout << ("Cell orientation is invalid!");
         return Invalid;
     }
     return MessengerTool.InputToOrientation(inputOrientation);
@@ -147,14 +147,14 @@ bool GameManager::TryPlaceShip(
         // Check if the cell is invalid
         if(selectedCellSpace == nullptr)
         {
-            if(isPlayer) MessengerTool.Print("Invalid cell position.");
+            if(isPlayer) cout << ("Invalid cell position.");
             return false;
         }
 
         // Check if the ship is overlapping other ships
         if(count(controller.GetCellsOccupied().begin(), controller.GetCellsOccupied().end(), selectedCellSpace))
         {
-            if(isPlayer) MessengerTool.Print("Cannot overlap ships.");
+            if(isPlayer) cout << ("Cannot overlap ships.");
             return false;
         }
 
@@ -164,7 +164,7 @@ bool GameManager::TryPlaceShip(
             selectedCellSpace->GetCoordinates().second,
             PlayableGridSize, PlayableGridSize))
         {
-            if(isPlayer) MessengerTool.Print("Cannot place ship out of bounds of the grid.");
+            if(isPlayer) cout << ("Cannot place ship out of bounds of the grid.");
             return false;
         }
 
@@ -183,7 +183,7 @@ bool GameManager::TryPlaceShip(
     // Send successful feedback to player only
     if(isPlayer)
     {
-        MessengerTool.Print("Ship placed successfully!");
+        cout << ("Ship placed successfully!");
         gridController.DrawGrid();
     }
     return true;

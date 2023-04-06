@@ -20,7 +20,7 @@ enum EChecksRegex
  * the string checks and messages.
  * Use inline definitions, no cpp
  */
-class Messenger
+class StringChecker
 {
 private:
     string GetSanitisedInput(const string& input);
@@ -28,7 +28,7 @@ private:
 public:
     map<EChecksRegex, string> RegexRuleMap;
     
-    Messenger()
+    StringChecker()
     {
          RegexRuleMap =
          {
@@ -37,9 +37,6 @@ public:
              { OrientationCheckVertical, "VERTICAL|V" },
          };   
     }
-
-    // Print 
-    void Print(const string& message);
 
     // Tools
     /**
@@ -54,7 +51,7 @@ public:
     EOrientation InputToOrientation(const string& input);
 };
 
-inline string Messenger::GetSanitisedInput(const string& input)
+inline string StringChecker::GetSanitisedInput(const string& input)
 {
     string sanitisedString;
     for (auto chr : input)
@@ -65,19 +62,14 @@ inline string Messenger::GetSanitisedInput(const string& input)
     return sanitisedString;
 }
 
-inline void Messenger::Print(const string& message)
-{
-   cout << message << endl;
-}
-
-inline bool Messenger::IsInputValid(const string& input, const EChecksRegex& checkRule)
+inline bool StringChecker::IsInputValid(const string& input, const EChecksRegex& checkRule)
 {
     const string sanitisedInput = GetSanitisedInput(input);
     const regex rule(RegexRuleMap[checkRule]);
     return regex_match(sanitisedInput, rule);
 }
 
-inline pair<unsigned, unsigned> Messenger::InputCellToCoordinates(const string& input)
+inline pair<unsigned, unsigned> StringChecker::InputCellToCoordinates(const string& input)
 {
     if(input.size() != 2) return {InvalidCellIndex, InvalidCellIndex};
 
@@ -91,7 +83,7 @@ inline pair<unsigned, unsigned> Messenger::InputCellToCoordinates(const string& 
     return { row, column };
 }
 
-inline EOrientation Messenger::InputToOrientation(const string& input)
+inline EOrientation StringChecker::InputToOrientation(const string& input)
 {
     const string sanitisedInput = GetSanitisedInput(input);
     const regex ruleHorizontal(RegexRuleMap[OrientationCheckHorizontal]);

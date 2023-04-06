@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "AiBehaviour.h"
 #include "Grid.h"
-#include "Messenger.h"
+#include "StringChecker.h"
 #include "PlayerController.h"
 
 using namespace std;
@@ -13,7 +13,7 @@ private:
     AiBehaviour* Computer = nullptr;
     Grid* PlayerGrid = nullptr;
     Grid* ComputerGrid = nullptr;
-    Messenger MessengerTool;
+    StringChecker MessengerTool;
     
     // Placement phase
     void PlaceShipsPlayer();
