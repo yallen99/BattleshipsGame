@@ -28,7 +28,7 @@ private:
      */
     bool TryPlaceShip(const unsigned& row,
                       const unsigned& column,
-                      EOrientation& orientation,
+                      const EOrientation& orientation,
                       Ship& ship,
                       PlayerController& controller,
                       bool isPlayer   // flag to distinguish between manual and automatic placement

@@ -67,15 +67,15 @@ private:
     unsigned Columns = 0;
     
      vector<Cell*> Cells{};
-     map<const ECellState, string> CellStateMap;
+
     
     // -- Private functions -- //
     // Functions to draw the grid in the console
-    void DrawGridCorner();
-    void DrawColumnNumber(const unsigned& c);
-    void DrawRowIndex(const unsigned& r);
-    void DrawCell(const Cell& cell);
-    void DrawOneLine(const unsigned& r, const unsigned& columnCount, const Grid& grid);
+    static void DrawGridCorner();
+    static void DrawColumnNumber(const unsigned& c);
+    static void DrawRowIndex(const unsigned& r);
+    static void DrawCell(const Cell& cell);
+    static void DrawOneLine(const unsigned& r, const unsigned& columnCount, const Grid& grid);
     
 public:
     Grid() = default;
@@ -104,7 +104,7 @@ public:
      * \param PlayerOneGrid the grid on the left
      * \param PlayerTwoGrid the grid on the right
      */
-    void DrawBoard(const Grid& PlayerOneGrid, const Grid& PlayerTwoGrid);
+    static void DrawBoard(const Grid& PlayerOneGrid, const Grid& PlayerTwoGrid);
 
     /**
      * \brief Checks if a cell is within the bounds of a grid
@@ -120,4 +120,12 @@ public:
         const unsigned& rowBound,
         const unsigned& columnBound);
 };
- 
+
+static map<const ECellState, string> CellStateMap = {
+    {None, "[ ]"},
+    {Hit, "[X]"},
+    {Miss, "[O]"},
+    {Full, "[#]"},
+    {Hidden, "[ ]"},
+    {Sunk, "[~]"}
+};

@@ -34,7 +34,7 @@ public:
          {
              { CellCheck, "[A-Z][0-9]" },
              { OrientationCheckHorizontal, "HORIZONTAL|H" },
-             { OrientationCheckHorizontal, "VERTICAL|V" },
+             { OrientationCheckVertical, "VERTICAL|V" },
          };   
     }
 
@@ -95,7 +95,11 @@ inline EOrientation Messenger::InputToOrientation(const string& input)
 {
     const string sanitisedInput = GetSanitisedInput(input);
     const regex ruleHorizontal(RegexRuleMap[OrientationCheckHorizontal]);
-    return regex_match(sanitisedInput, ruleHorizontal) ? Horizontal : Vertical;
+    const regex ruleVertical(RegexRuleMap[OrientationCheckVertical]);
+    return regex_match(sanitisedInput, ruleHorizontal)
+    ? Horizontal
+    : regex_match(sanitisedInput, ruleVertical)
+        ? Vertical : Invalid;
 }
 
 

@@ -37,14 +37,6 @@ Grid::Grid(const unsigned& rows, const unsigned& columns)
 {
     Columns = columns;
     Rows = rows;
-
-    CellStateMap = {
-        {None, "[ ]"},
-        {Hit, "[X]"},
-        {Miss, "[O]"},
-        {Full, "[=]"},
-        {Hidden, "[ ]"},
-    };
 }
 
 Cell* Grid::GetCellAt(const unsigned& row, const unsigned& column) 
@@ -94,7 +86,31 @@ void Grid::DrawGrid()
 
 void Grid::DrawBoard(const Grid& PlayerOneGrid, const Grid& PlayerTwoGrid)
 {
-    // todo - draw the board for 2 players
+    // Board title
+    cout << "         PLAYER         " << "              COMPUTER              "<< endl;
+
+    // Draw top line with numbers
+    const unsigned columnCount = PlayerOneGrid.GetColumns() + PlayerTwoGrid.GetColumns();
+    DrawGridCorner();
+
+    for(int c = 0; c < static_cast<int>(columnCount); c++)
+    {
+        Grid::DrawColumnNumber(c % (columnCount / 2) + 1);
+        if(c == columnCount / 2 - 1)
+        {
+            cout << "     ";
+            DrawGridCorner();
+        }
+    }
+    cout << endl;
+    for(int r = 0; r < static_cast<int>(PlayerOneGrid.GetRows()); r++)
+    {
+        DrawOneLine(r, PlayerOneGrid.GetColumns(), PlayerOneGrid);
+        cout << "     ";
+        DrawOneLine(r, PlayerTwoGrid.GetColumns(), PlayerTwoGrid);
+        cout << endl;
+    }
+    cout << endl;
 }
 
 bool Grid::IsCellWithinBounds(const unsigned& row,
