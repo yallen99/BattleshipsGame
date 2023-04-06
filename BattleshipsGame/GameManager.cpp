@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-// todo place ships Computer - automatically
 // todo Fighting phase
 // todo Results
 
@@ -30,9 +29,18 @@ void GameManager::StartGame()
     cout << ("                        FIGHT!");
     cout << endl;
     Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
+    do
+    {
+        DoPlayerAttack();
+        Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
+        DoComputerAttack();
+        Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
+    }
+    while(Player->GetPlayerHealth() > 0 || Computer->GetPlayerHealth() > 0);
 }
 
-// ------------ PLACEMENT ------------ // 
+// ------------ PLACEMENT ------------ //
+
 void GameManager::PlaceShipsPlayer()
 {
     PlayerGrid->DrawGrid();
@@ -47,14 +55,14 @@ void GameManager::PlaceShipsPlayer()
         cout << ("Now placing ship - " + currentShip.GetShipName());
         
         // Input the Cell where to place the ship from (ships are placed left to right or top to bottom)
-        cout << ("Enter slot (ie. A3):");
+        cout << "Enter slot (ie. A3):" << endl;
         const pair<unsigned, unsigned> cell = TryGetCoordinatesFromInput();
         const unsigned row = cell.first;
         const unsigned column = cell.second;
         if(row == InvalidCellIndex || column == InvalidCellIndex) continue;
         
         // Input the orientation (vertical / horizontal)
-        cout << ("Enter orientation (H / Horizontal or V / Vertical):");
+        cout << "Enter orientation (H / Horizontal or V / Vertical):" << endl;
         EOrientation orientation = TryGetOrientationFromInput();
         if(orientation == Invalid) continue;
 
@@ -68,7 +76,7 @@ void GameManager::PlaceShipsPlayer()
 }
 void GameManager::PlaceShipsComputer()
 {
-    const unsigned shipsCount = static_cast<unsigned>(Computer->GetShipsOwned().size()); // NOLINT(clang-diagnostic-shorten-64-to-32)
+    const unsigned shipsCount = static_cast<unsigned>(Computer->GetShipsOwned().size()); 
     unsigned unplacedShips = shipsCount;
     // Loop while there are still unplaced ships
     do
@@ -183,10 +191,88 @@ bool GameManager::TryPlaceShip(
     // Send successful feedback to player only
     if(isPlayer)
     {
-        cout << ("Ship placed successfully!");
+        cout << "Ship placed successfully!" << endl;
         gridController.DrawGrid();
     }
     return true;
+}
+
+// ------------ ATTACK ------------ //
+
+void GameManager::DoPlayerAttack()
+{   // Number of turns the player can take at once
+    // For now, is 1
+    int turnsAllowedPlayer = 1;
+    do
+    {
+        cout << endl;
+        cout << "Enter slot to attack (ie. A3):";
+
+        const pair<unsigned, unsigned> cell = TryGetCoordinatesFromInput();
+        const unsigned row = cell.first;
+        const unsigned column = cell.second;
+
+        // Check if the cell is invalid
+        if(row == InvalidCellIndex && column == InvalidCellIndex)
+        {
+            cout << "Invalid cell position";
+            continue;
+        }
+
+        // Check if the cell is already been hit
+        Cell* triedCell = ComputerGrid->GetCellAt(row, column);
+        const ECellState triedCellState = triedCell->GetState();
+        if(triedCellState == Hit || triedCellState == Miss)// || triedCellState == Sunk)
+        {
+            cout << "You cannot hit the same cell twice!";
+            continue;
+        }
+        
+        RegisterHit(triedCell, *Computer, true);
+        
+        turnsAllowedPlayer--;
+    } while (turnsAllowedPlayer > 0);
+}
+
+void GameManager::DoComputerAttack()
+{
+    // Number of turns the player can take at once
+    // For now, is 1
+    int turnsAllowedComputer = 1;
+
+    do
+    {
+        const pair<unsigned, unsigned> coordinates = Computer->GetRandomCell();
+        // Check if the cell is invalid
+        if(coordinates.first == InvalidCellIndex && coordinates.second == InvalidCellIndex)
+        {
+            continue;
+        }
+
+        Cell* cell = PlayerGrid->GetCellAt(coordinates.first, coordinates.second);
+        RegisterHit(cell, *Player, false);
+        
+        turnsAllowedComputer--;
+    } while(turnsAllowedComputer > 0);
+}
+
+void GameManager::RegisterHit(Cell* hitCell, const PlayerController& opponent, bool isPlayer)
+{
+    //todo [ stretch goal ] add difficulty here?
+    
+    // Update the hit cell state
+    hitCell->SetState(hitCell->GetState() == Full // is it a player grid cell?
+        ? Hit : hitCell->GetState() == Sunk ? Hit  //todo REPLACE SUNK WITH HIDDEN // is it a computer grid cell?
+        : Miss); // is it an empty cell, anyway?
+
+    hitCell->GetState() == Hit ? cout << "HIT !" << endl : cout << "MISS !" << endl;
+
+    // If we hit something, decrease the ship's life
+    if(hitCell->GetState() == Hit)
+    {
+        Ship& hitShip = *opponent.GetShipFromCell(hitCell);
+        hitShip.DamageShip();
+    }
 }
 
 

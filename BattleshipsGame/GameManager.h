@@ -34,6 +34,11 @@ private:
                       bool isPlayer   // flag to distinguish between manual and automatic placement
     );
 
+    // Attack Phase
+    void DoPlayerAttack();
+    void DoComputerAttack();
+    
+    void RegisterHit(Cell* hitCell, const PlayerController& opponent, bool isPlayer);
 public:
     // -- Constructor --//
     GameManager();

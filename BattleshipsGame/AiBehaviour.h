@@ -11,5 +11,5 @@ public:
     AiBehaviour() = default;
 
     // todo add some *intelligence* here
-    
+    pair<unsigned, unsigned> GetRandomCell() const;
 };
