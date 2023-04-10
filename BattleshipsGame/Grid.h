@@ -12,7 +12,8 @@ enum ECellState : uint8_t
     Miss,
     Full,
     Hidden,
-    Sunk
+    Sunk,
+    Debug
 };
 
 enum EOrientation : uint8_t
@@ -127,5 +128,7 @@ static map<const ECellState, string> CellStateMap = {
     {Miss, "[O]"},
     {Full, "[#]"},
     {Hidden, "[ ]"},
-    {Sunk, "[~]"}
+    {Sunk, "[~]"},
+    {Debug, "[@]"},
+    
 };

@@ -8,9 +8,7 @@
 
 using namespace std;
 
-/**
- * \brief Playable base for all entities (player or AI)
- */
+
 class PlayerController
 {
 private:
@@ -27,7 +25,6 @@ private:
     vector<Ship*> ShipsOwned;
     Grid* Grid = nullptr;
     
-    // todo might not need this
     unsigned PlayerHealth = 0;
     
 public:
@@ -35,7 +32,7 @@ public:
     PlayerController();
 
     // -- Getters & Setters -- //
-    unsigned GetPlayerHealth() const { return PlayerHealth; }
+    unsigned GetHealth() const { return PlayerHealth; }
     vector<Ship*>& GetShipsOwned() { return ShipsOwned; }
     vector<Cell*>& GetCellsOccupied() { return CellsOccupiedByPlayer; }
     class Grid* GetGrid() const { return Grid; }
@@ -46,6 +43,5 @@ public:
      */
     Ship* GetShipFromCell(Cell* cell) const;
 
-    // todo might not need this
     void DamagePlayer(unsigned damageValue);
 };

@@ -1,11 +1,27 @@
 
 #include "GameManager.h"
+using namespace std;
 
 int main()
 {
-    //todo add restart method
-    auto game = GameManager();
-    game.StartGame();
+    bool shouldRestart;
+    string restartKey;
+    do
+    {
+        GameManager game = GameManager();
+        StringChecker stringChecker = StringChecker();
+        game.StartGame();
+
+        cout << "Restart [R]        Quit [X]" << endl;
+        cin >> restartKey;
+        
+        shouldRestart = stringChecker.IsInputValid(restartKey, QuitGame)
+        ? false
+        : stringChecker.IsInputValid(restartKey, RestartGame)
+            ? true
+            : false;
+        
+    } while(shouldRestart);
     return 0;
 }
 

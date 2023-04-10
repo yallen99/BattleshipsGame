@@ -13,6 +13,8 @@ enum EChecksRegex
     CellCheck,
     OrientationCheckHorizontal,
     OrientationCheckVertical,
+    RestartGame,
+    QuitGame
 };
 
 /**
@@ -23,7 +25,7 @@ enum EChecksRegex
 class StringChecker
 {
 private:
-    string GetSanitisedInput(const string& input);
+    string GetSanitisedInput(const string& input) const;
     
 public:
     map<EChecksRegex, string> RegexRuleMap;
@@ -35,6 +37,8 @@ public:
              { CellCheck, "[A-Z][0-9]" },
              { OrientationCheckHorizontal, "HORIZONTAL|H" },
              { OrientationCheckVertical, "VERTICAL|V" },
+             { RestartGame, "R" },
+             { QuitGame, "X" },
          };   
     }
 
@@ -51,7 +55,7 @@ public:
     EOrientation InputToOrientation(const string& input);
 };
 
-inline string StringChecker::GetSanitisedInput(const string& input)
+inline string StringChecker::GetSanitisedInput(const string& input) const
 {
     string sanitisedString;
     for (auto chr : input)

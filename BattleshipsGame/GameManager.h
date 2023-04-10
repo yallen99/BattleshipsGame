@@ -6,6 +6,13 @@
 
 using namespace std;
 
+enum EGamePhase
+{
+    Placement,
+    Attack,
+    End
+};
+
 class GameManager
 {
 private:
@@ -14,6 +21,7 @@ private:
     Grid* PlayerGrid = nullptr;
     Grid* ComputerGrid = nullptr;
     StringChecker MessengerTool;
+    EGamePhase Phase = Placement;
     
     // Placement phase
     void PlaceShipsPlayer();
@@ -38,10 +46,11 @@ private:
     void DoPlayerAttack();
     void DoComputerAttack();
     
-    void RegisterHit(Cell* hitCell, const PlayerController& opponent, bool isPlayer);
+    void RegisterHit(Cell* hitCell, PlayerController& opponent, bool isPlayer);
 public:
     // -- Constructor --//
     GameManager();
 
     void StartGame();
+    bool IsGameOver() const;
 };

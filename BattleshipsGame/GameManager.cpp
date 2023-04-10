@@ -17,27 +17,37 @@ GameManager::GameManager()
 // ------------ GAME LOOP ------------ // 
 void GameManager::StartGame()
 {
-    cout << ("Welcome to Battleships!");
-
+    cout << "Welcome to Battleships!" << endl;
     // Generate a seed for the random generators
     srand(static_cast<int>(time(nullptr)));  // NOLINT(cert-msc51-cpp, clang-diagnostic-shorten-64-to-32)
-    PlaceShipsPlayer();
-    PlaceShipsComputer();
+    
+    // Placement Phase
+    do
+    {
+        PlaceShipsPlayer();
+        PlaceShipsComputer();
 
-    cout << endl;
-    cout << endl;
-    cout << ("                        FIGHT!");
-    cout << endl;
-    Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
+        cout << endl << endl << "                        FIGHT!" << endl;
+        Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
+
+        Phase = Attack;
+        
+    } while(Phase == Placement);
+   
+    // Attack Phase
     do
     {
         DoPlayerAttack();
         Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
         DoComputerAttack();
         Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
+
+        if(IsGameOver()) Phase = End;
     }
-    while(Player->GetPlayerHealth() > 0 || Computer->GetPlayerHealth() > 0);
+    while(Phase == Attack);
 }
+
+
 
 // ------------ PLACEMENT ------------ //
 
@@ -52,7 +62,7 @@ void GameManager::PlaceShipsPlayer()
     {
         Ship& currentShip = *Player->GetShipsOwned()[shipsCount - unplacedShips];
 
-        cout << ("Now placing ship - " + currentShip.GetShipName());
+        cout << "Now placing ship - " + currentShip.GetShipName() << endl;
         
         // Input the Cell where to place the ship from (ships are placed left to right or top to bottom)
         cout << "Enter slot (ie. A3):" << endl;
@@ -184,7 +194,7 @@ bool GameManager::TryPlaceShip(
     for (Cell* cachedCell : occupiedCellsByCurrentShip)
     {
         ship.AddCell(cachedCell);
-        cachedCell->SetState(isPlayer ? Full : Sunk); // todo set Sunk to Hidden. Debug purposes only
+        cachedCell->SetState(isPlayer ? Full : Debug); // todo set Debug to Hidden. Debug purposes only
         controller.AddOccupiedCell(cachedCell);
     }
 
@@ -256,14 +266,16 @@ void GameManager::DoComputerAttack()
     } while(turnsAllowedComputer > 0);
 }
 
-void GameManager::RegisterHit(Cell* hitCell, const PlayerController& opponent, bool isPlayer)
+void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool isPlayer)
 {
     //todo [ stretch goal ] add difficulty here?
     
     // Update the hit cell state
     hitCell->SetState(hitCell->GetState() == Full // is it a player grid cell?
-        ? Hit : hitCell->GetState() == Sunk ? Hit  //todo REPLACE SUNK WITH HIDDEN // is it a computer grid cell?
-        : Miss); // is it an empty cell, anyway?
+        ? Hit
+        : hitCell->GetState() == Hidden || hitCell->GetState() == Debug // todo remove debug
+            ? Hit   // is it a computer grid cell?
+            : Miss); // is it an empty cell, anyway?
 
     hitCell->GetState() == Hit ? cout << "HIT !" << endl : cout << "MISS !" << endl;
 
@@ -272,7 +284,17 @@ void GameManager::RegisterHit(Cell* hitCell, const PlayerController& opponent, b
     {
         Ship& hitShip = *opponent.GetShipFromCell(hitCell);
         hitShip.DamageShip();
+        opponent.DamagePlayer(1);
     }
+}
+
+bool GameManager::IsGameOver() const
+{
+    if(Player->GetHealth() != 0 && Computer->GetHealth() != 0 ) return false;
+    Player->GetHealth() == 0
+    ? cout << "*** COMPUTER WINS! ***" << endl
+    : cout << "*** PLAYER WINS! ***" << endl;
+    return true;
 }
 
 
