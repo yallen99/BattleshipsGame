@@ -57,7 +57,7 @@ public:
     /**
      * \return { row, column } 
      */
-    pair<unsigned, unsigned> InputCellToCoordinates(const string& input);
+    pair<unsigned, unsigned> InputCellToCoordinates(const string& input) const;
     EOrientation InputToOrientation(const string& input);
     int InputToDifficulty(const string& input);
 };
@@ -80,7 +80,7 @@ inline bool StringChecker::IsInputValid(const string& input, const EChecksRegex&
     return regex_match(sanitisedInput, rule);
 }
 
-inline pair<unsigned, unsigned> StringChecker::InputCellToCoordinates(const string& input)
+inline pair<unsigned, unsigned> StringChecker::InputCellToCoordinates(const string& input) const
 {
     if(input.size() != 2) return {InvalidCellIndex, InvalidCellIndex};
 
@@ -116,5 +116,3 @@ inline int StringChecker::InputToDifficulty(const string& input)
         ? 2 : regex_match(sanitisedInput, ruleHard)
             ? 3 : 0;
 }
-
-

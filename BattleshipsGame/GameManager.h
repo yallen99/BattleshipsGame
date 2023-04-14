@@ -24,7 +24,7 @@ private:
     Grid* ComputerGrid = nullptr;
     StringChecker MessengerTool;
     EGamePhase Phase = GameModeSelect;
-    EDifficulty Difficulty; // todo add a difficulty selector
+    EDifficulty Difficulty; 
 
     // Game Mode Select
     void SelectMode();
@@ -53,6 +53,7 @@ private:
     void DoComputerAttack();
     
     void RegisterHit(Cell* hitCell, PlayerController& opponent, bool isPlayer);
+    string GetHealthStringDisplay(const unsigned& health);
 public:
     // -- Constructor --//
     GameManager();

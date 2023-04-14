@@ -41,7 +41,9 @@ void GameManager::StartGame()
         DoComputerAttack();
         Grid::DrawBoard(*PlayerGrid, *ComputerGrid);
 
-        if(IsGameOver()) Phase = End;
+        // Log healths
+        cout << "PLAYER   [" << GetHealthStringDisplay(Player->GetHealth()) << "]" << endl;
+        cout << "COMPUTER [" << GetHealthStringDisplay(Computer->GetHealth()) << "]" << endl;
     }
     while(Phase == Attack);
 }
@@ -222,7 +224,7 @@ bool GameManager::TryPlaceShip(
     for (Cell* cachedCell : occupiedCellsByCurrentShip)
     {
         ship.AddCell(cachedCell);
-        cachedCell->SetState(isPlayer ? Full : Debug); // todo set Debug to Hidden. Debug purposes only
+        cachedCell->SetState(isPlayer ? Full : Hidden);
         controller.AddOccupiedCell(cachedCell);
     }
 
@@ -265,7 +267,8 @@ void GameManager::DoPlayerAttack()
             cout << "You cannot hit the same cell twice!";
             continue;
         }
-        
+
+        cout << "                   PLAYER ";
         RegisterHit(triedCell, *Computer, true);
         
         turnsAllowedPlayer--;
@@ -288,6 +291,8 @@ void GameManager::DoComputerAttack()
         }
 
         Cell* cell = PlayerGrid->GetCellAt(coordinates.first, coordinates.second);
+
+        cout << "                   COMPUTER ";
         RegisterHit(cell, *Player, false);
         
         turnsAllowedComputer--;
@@ -301,7 +306,7 @@ void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool is
     {
     case Full:
     case Hidden:
-    case Debug: // todo remove debug
+    case Debug:
         hitCell->SetState(Hit);
         break;
     case None:
@@ -314,7 +319,8 @@ void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool is
         break;
     }
 
-    hitCell->GetState() == Hit ? cout << "HIT !" << endl : cout << "MISS !" << endl;
+    hitCell->GetState() == Hit
+    ? cout <<  " HIT !" << endl : cout << "MISS !" << endl;
 
     // If we hit something, decrease the ship's life
     if(hitCell->GetState() == Hit)
@@ -337,9 +343,11 @@ void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool is
         if(Difficulty == Hard)
         {
             hitShip.IsShipSunk()
-                ? cout << hitShip.GetShipName() << " destroyed!" << endl
-                : cout << hitShip.GetShipName() << " hit!" << endl;
+                ? cout <<"              "<< hitShip.GetShipName() << " destroyed!" << endl
+                : cout <<"              " << hitShip.GetShipName() << " hit!" << endl;
         }
+
+        if(IsGameOver()) Phase = End;
     }
     if(!isPlayer && Difficulty == Hard) Computer->SetLastTriedCell(*hitCell);
 }
@@ -353,7 +361,12 @@ bool GameManager::IsGameOver() const
     return true;
 }
 
-
-
-
-
+string GameManager::GetHealthStringDisplay(const unsigned& health)
+{
+    string str;
+    for (unsigned i = 0; i < health; i++)
+    {
+        str += "=";
+    }
+    return str;
+}

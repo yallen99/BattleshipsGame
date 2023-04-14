@@ -4,7 +4,7 @@ using namespace std;
 
 int main()
 {
-    bool shouldRestart;
+    bool shouldRestart = false;
     string restartKey;
     do
     {
@@ -15,18 +15,19 @@ int main()
         cout << "Restart [R]        Quit [X]" << endl;
         cin >> restartKey;
         
-        shouldRestart = stringChecker.IsInputValid(restartKey, QuitGame)
-        ? false
-        : stringChecker.IsInputValid(restartKey, RestartGame)
-            ? true
-            : false;
-        
+        if(stringChecker.IsInputValid(restartKey, QuitGame))
+        {
+             shouldRestart = false;
+        }
+        else if(stringChecker.IsInputValid(restartKey, RestartGame))
+        {
+            shouldRestart = true;
+        }
+
     } while(shouldRestart);
     return 0;
 }
 
-
 // Stretch goal:
 // SALVO game mode (5 vs 5 turns)
-// Difficulties
 // 2 players game mode (?)
