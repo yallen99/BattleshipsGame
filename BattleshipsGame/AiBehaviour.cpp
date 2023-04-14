@@ -109,7 +109,7 @@ pair<unsigned, unsigned> AiBehaviour::GetCellFromHitOnMedium()
 pair<unsigned, unsigned> AiBehaviour::GetCellFromHitOnHard()
 {
     // If there wasn't a successful previous hit and the origin cell is also empty, try another random cell
-    if(HitCell == nullptr && OriginCell == nullptr) return GetRandomCellCoordinates();
+    if(HitCell == nullptr && OriginCell == nullptr) return GetFilteredRandomCellCoordinates(GetRandomCellCoordinates());
     
     // If there was a hit on the previous round, set the origin cell
     if(LastTriedCell->GetState() == Hit && OriginCell == nullptr)

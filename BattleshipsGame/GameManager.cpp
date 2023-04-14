@@ -343,8 +343,8 @@ void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool is
         if(Difficulty == Hard)
         {
             hitShip.IsShipSunk()
-                ? cout <<"              "<< hitShip.GetShipName() << " destroyed!" << endl
-                : cout <<"              " << hitShip.GetShipName() << " hit!" << endl;
+                ? cout <<"                   "<< hitShip.GetShipName() << " destroyed!" << endl
+                : cout <<"                   " << hitShip.GetShipName() << " hit!" << endl;
         }
 
         if(IsGameOver()) Phase = End;
@@ -356,8 +356,8 @@ bool GameManager::IsGameOver() const
 {
     if(Player->GetHealth() != 0 && Computer->GetHealth() != 0 ) return false;
     Player->GetHealth() == 0
-    ? cout << "*** COMPUTER WINS! ***" << endl
-    : cout << "*** PLAYER WINS! ***" << endl;
+    ? cout << "                   *** COMPUTER WINS! ***" << endl
+    : cout << "                   *** PLAYER WINS! ***" << endl;
     return true;
 }
 

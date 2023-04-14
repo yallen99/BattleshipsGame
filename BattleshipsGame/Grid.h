@@ -122,13 +122,26 @@ public:
         const unsigned& columnBound);
 };
 
+// Rider coloured 
 static map<const ECellState, string> CellStateMap = {
+    //{None, "\033[32m[ ]\033[0m"}, GREEN
+    //{None, "\x1B[31m[ ]\x1B[31m"}, RED
+    //{None, "\x1B[36m[ ]\x1B[36m"}, AQUA
+    //{None, "\033[35m[ ]\033[0m"}, PINK
     {None, "[ ]"},
-    {Hit, "[X]"},
-    {Miss, "[O]"},
-    {Full, "[#]"},
+    {Hit, "\x1B[31m X \x1B[0m"},
+    {Miss, " O "},
+    {Full, "\033[32m # \033[0m"},
     {Hidden, "[ ]"},
-    {Sunk, "[~]"},
-    {Debug, "[@]"},
-    
+    {Sunk, "\x1B[36m ~ \x1B[0m"},
+    {Debug, "[@]"}
 };
+/*static map<const ECellState, string> CellStateMap = {
+    {None, "[ ]"},
+    {Hit, " X "},
+    {Miss, " O "},
+    {Full, " # "},
+    {Hidden, "[ ]"},
+    {Sunk, " ~ "},
+    {Debug, "[@]"}
+};*/
