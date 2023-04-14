@@ -7,6 +7,7 @@
  */
 enum EStaticGameValues : uint8_t
 {
+    PossibleMovementDirections = 4, // for AI
     MaxShipPoints = 5,
     PlayableGridSize = 7, // 7x7 grid
     InvalidCellIndex = 99

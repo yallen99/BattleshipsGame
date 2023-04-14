@@ -30,6 +30,7 @@ public:
     unsigned GetHealthOrSize () const { return Health; }
     string GetShipName() const { return ShipName; }
     vector<Cell*>& GetCellsOccupied() { return CellsOccupied; }
+    bool IsShipSunk() { return Health <= 0; }
     
     void AddCell(Cell* cell);
     void DamageShip();

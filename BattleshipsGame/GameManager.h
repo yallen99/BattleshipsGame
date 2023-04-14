@@ -13,6 +13,7 @@ enum EGamePhase
     End
 };
 
+
 class GameManager
 {
 private:
@@ -22,6 +23,7 @@ private:
     Grid* ComputerGrid = nullptr;
     StringChecker MessengerTool;
     EGamePhase Phase = Placement;
+    EDifficulty Difficulty = Hard; // todo add a difficulty selector
     
     // Placement phase
     void PlaceShipsPlayer();

@@ -8,7 +8,7 @@
 GameManager::GameManager()
 {
     Player = new PlayerController();
-    Computer = new AiBehaviour();
+    Computer = new AiBehaviour(Player->GetGrid());
     PlayerGrid = Player->GetGrid();
     ComputerGrid = Computer->GetGrid();
     MessengerTool = StringChecker();
@@ -46,8 +46,6 @@ void GameManager::StartGame()
     }
     while(Phase == Attack);
 }
-
-
 
 // ------------ PLACEMENT ------------ //
 
@@ -125,11 +123,18 @@ pair<unsigned, unsigned> GameManager::TryGetCoordinatesFromInput()
 
     if(!MessengerTool.IsInputValid(inputCell, CellCheck))
     {
-        cout << ("Cell position is invalid!");
+        cout << "Cell position is invalid!" << endl;
         return {InvalidCellIndex, InvalidCellIndex};
     }
-    
-    return MessengerTool.InputCellToCoordinates(inputCell);
+    const pair<unsigned, unsigned> coordinates =  MessengerTool.InputCellToCoordinates(inputCell);
+    if(!PlayerGrid->IsCellWithinBounds(coordinates.first, coordinates.second,
+        PlayableGridSize, PlayableGridSize))
+    {
+        cout << "Cell position is invalid!" << endl;
+        return {InvalidCellIndex, InvalidCellIndex};
+    }
+
+    return coordinates;
 }
 EOrientation GameManager::TryGetOrientationFromInput()
 {
@@ -138,7 +143,7 @@ EOrientation GameManager::TryGetOrientationFromInput()
     if(!MessengerTool.IsInputValid(inputOrientation, OrientationCheckHorizontal) &&
         !MessengerTool.IsInputValid(inputOrientation, OrientationCheckVertical))
     {
-        cout << ("Cell orientation is invalid!");
+        cout << "Cell orientation is invalid!" << endl;
         return Invalid;
     }
     return MessengerTool.InputToOrientation(inputOrientation);
@@ -232,7 +237,7 @@ void GameManager::DoPlayerAttack()
         // Check if the cell is already been hit
         Cell* triedCell = ComputerGrid->GetCellAt(row, column);
         const ECellState triedCellState = triedCell->GetState();
-        if(triedCellState == Hit || triedCellState == Miss)// || triedCellState == Sunk)
+        if(triedCellState == Hit || triedCellState == Miss || triedCellState == Sunk)
         {
             cout << "You cannot hit the same cell twice!";
             continue;
@@ -252,7 +257,7 @@ void GameManager::DoComputerAttack()
 
     do
     {
-        const pair<unsigned, unsigned> coordinates = Computer->GetRandomCell();
+        const pair<unsigned, unsigned> coordinates = Computer->GetNextCell(Difficulty);
         // Check if the cell is invalid
         if(coordinates.first == InvalidCellIndex && coordinates.second == InvalidCellIndex)
         {
@@ -268,14 +273,31 @@ void GameManager::DoComputerAttack()
 
 void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool isPlayer)
 {
-    //todo [ stretch goal ] add difficulty here?
-    
     // Update the hit cell state
+    switch (hitCell->GetState())
+    {
+    case Full:
+    case Hidden:
+    case Debug: // todo remove debug
+        hitCell->SetState(Hit);
+        break;
+    case None:
+        hitCell->SetState(Miss);
+        break;
+    // These cases shouldn't be hit anyway
+    case Hit:
+    case Miss: 
+    case Sunk:
+        break;
+    }
+    
+    /*
     hitCell->SetState(hitCell->GetState() == Full // is it a player grid cell?
         ? Hit
         : hitCell->GetState() == Hidden || hitCell->GetState() == Debug // todo remove debug
             ? Hit   // is it a computer grid cell?
             : Miss); // is it an empty cell, anyway?
+            */
 
     hitCell->GetState() == Hit ? cout << "HIT !" << endl : cout << "MISS !" << endl;
 
@@ -285,7 +307,26 @@ void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool is
         Ship& hitShip = *opponent.GetShipFromCell(hitCell);
         hitShip.DamageShip();
         opponent.DamagePlayer(1);
+
+        // If the entity attacking is AI
+        if(!isPlayer &&  Difficulty != Easy)
+        {
+            Computer->SetTargetCellOnHit(*hitCell);
+            if(hitShip.IsShipSunk())
+            {
+                Computer->ResetDataOnShipSunk();
+            }
+        }
+
+        // Log the ship that was hit on Hard difficulty
+        if(Difficulty == Hard)
+        {
+            hitShip.IsShipSunk()
+                ? cout << hitShip.GetShipName() << " destroyed!" << endl
+                : cout << hitShip.GetShipName() << " hit!" << endl;
+        }
     }
+    if(!isPlayer && Difficulty == Hard) Computer->SetLastTriedCell(*hitCell);
 }
 
 bool GameManager::IsGameOver() const
