@@ -1,9 +1,5 @@
 ﻿#include "GameManager.h"
-
 #include <iostream>
-
-// todo Fighting phase
-// todo Results
 
 GameManager::GameManager()
 {
@@ -12,15 +8,18 @@ GameManager::GameManager()
     PlayerGrid = Player->GetGrid();
     ComputerGrid = Computer->GetGrid();
     MessengerTool = StringChecker();
+    Difficulty = Unset;
 }
 
 // ------------ GAME LOOP ------------ // 
 void GameManager::StartGame()
 {
-    cout << "Welcome to Battleships!" << endl;
     // Generate a seed for the random generators
     srand(static_cast<int>(time(nullptr)));  // NOLINT(cert-msc51-cpp, clang-diagnostic-shorten-64-to-32)
-    
+
+    // Setup Mode
+    SelectMode();
+
     // Placement Phase
     do
     {
@@ -47,10 +46,34 @@ void GameManager::StartGame()
     while(Phase == Attack);
 }
 
+// ------------ GAME MODE SELECT ------------ //
+
+void GameManager::SelectMode()
+{
+    cout << "Welcome to Battleships!" << endl;
+    do
+    {
+        cout << " Please Select the difficulty: Easy [E]    Medium [M]     Hard [H]" << endl;
+        string inputString;
+        cin >> inputString;
+        if(!MessengerTool.IsInputValid(inputString, GameDifficultyEasy)
+            && !MessengerTool.IsInputValid(inputString, GameDifficultyMedium)
+            && !MessengerTool.IsInputValid(inputString, GameDifficultyHard))
+        {
+            cout << "Invalid input for difficulty!" << endl;
+            continue;
+        }
+        Difficulty = static_cast<EDifficulty>(MessengerTool.InputToDifficulty(inputString));
+        Phase = Placement;
+    }
+    while (Phase == GameModeSelect);
+}
+
 // ------------ PLACEMENT ------------ //
 
 void GameManager::PlaceShipsPlayer()
 {
+    cout << " Place your ships! " << endl;
     PlayerGrid->DrawGrid();
     const unsigned shipsCount = static_cast<unsigned>(Player->GetShipsOwned().size());
     unsigned unplacedShips = shipsCount;
@@ -290,14 +313,6 @@ void GameManager::RegisterHit(Cell* hitCell, PlayerController& opponent, bool is
     case Sunk:
         break;
     }
-    
-    /*
-    hitCell->SetState(hitCell->GetState() == Full // is it a player grid cell?
-        ? Hit
-        : hitCell->GetState() == Hidden || hitCell->GetState() == Debug // todo remove debug
-            ? Hit   // is it a computer grid cell?
-            : Miss); // is it an empty cell, anyway?
-            */
 
     hitCell->GetState() == Hit ? cout << "HIT !" << endl : cout << "MISS !" << endl;
 

@@ -14,6 +14,9 @@ enum EChecksRegex
     OrientationCheckHorizontal,
     OrientationCheckVertical,
     RestartGame,
+    GameDifficultyEasy,
+    GameDifficultyMedium,
+    GameDifficultyHard,
     QuitGame
 };
 
@@ -37,6 +40,9 @@ public:
              { CellCheck, "[A-Z][0-9]" },
              { OrientationCheckHorizontal, "HORIZONTAL|H" },
              { OrientationCheckVertical, "VERTICAL|V" },
+             { GameDifficultyEasy, "E" },
+             { GameDifficultyMedium, "M" },
+             { GameDifficultyHard, "H" },
              { RestartGame, "R" },
              { QuitGame, "X" },
          };   
@@ -53,6 +59,7 @@ public:
      */
     pair<unsigned, unsigned> InputCellToCoordinates(const string& input);
     EOrientation InputToOrientation(const string& input);
+    int InputToDifficulty(const string& input);
 };
 
 inline string StringChecker::GetSanitisedInput(const string& input) const
@@ -96,6 +103,18 @@ inline EOrientation StringChecker::InputToOrientation(const string& input)
     ? Horizontal
     : regex_match(sanitisedInput, ruleVertical)
         ? Vertical : Invalid;
+}
+
+inline int StringChecker::InputToDifficulty(const string& input)
+{
+    const string sanitisedInput = GetSanitisedInput(input);
+    const regex ruleEasy(RegexRuleMap[GameDifficultyEasy]);
+    const regex ruleModerate(RegexRuleMap[GameDifficultyMedium]);
+    const regex ruleHard(RegexRuleMap[GameDifficultyHard]);
+    return regex_match(sanitisedInput, ruleEasy)
+    ? 1 : regex_match(sanitisedInput, ruleModerate)
+        ? 2 : regex_match(sanitisedInput, ruleHard)
+            ? 3 : 0;
 }
 
 

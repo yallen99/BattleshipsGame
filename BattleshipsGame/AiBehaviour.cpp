@@ -89,7 +89,7 @@ pair<unsigned, unsigned> AiBehaviour::GetCellCoordinatesWithMovement(const Movem
         return pair<unsigned, unsigned>{coordinates.first, coordinates.second + movement.Direction};
     case Vertical:
         return pair<unsigned, unsigned>{coordinates.first + movement.Direction, coordinates.second};
-    default: break;
+    case Invalid: break;
     }
     return pair<unsigned, unsigned>{InvalidCellIndex, InvalidCellIndex};
 }

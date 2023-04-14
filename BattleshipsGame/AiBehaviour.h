@@ -5,9 +5,10 @@
 
 enum EDifficulty
 {
-    Easy,
-    Moderate,
-    Hard
+    Unset = 0,
+    Easy = 1,
+    Moderate = 2,
+    Hard = 3,
 };
 
 using namespace std;

@@ -8,6 +8,7 @@ using namespace std;
 
 enum EGamePhase
 {
+    GameModeSelect,
     Placement,
     Attack,
     End
@@ -16,14 +17,17 @@ enum EGamePhase
 
 class GameManager
 {
-private:
+private: 
     PlayerController* Player = nullptr;
     AiBehaviour* Computer = nullptr;
     Grid* PlayerGrid = nullptr;
     Grid* ComputerGrid = nullptr;
     StringChecker MessengerTool;
-    EGamePhase Phase = Placement;
-    EDifficulty Difficulty = Hard; // todo add a difficulty selector
+    EGamePhase Phase = GameModeSelect;
+    EDifficulty Difficulty; // todo add a difficulty selector
+
+    // Game Mode Select
+    void SelectMode();
     
     // Placement phase
     void PlaceShipsPlayer();
